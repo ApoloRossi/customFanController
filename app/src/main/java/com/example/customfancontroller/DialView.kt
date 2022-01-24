@@ -83,6 +83,11 @@ class DialView @JvmOverloads constructor(
         y = (radius * sin(angle)).toFloat() + height / 2
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+    }
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
@@ -103,15 +108,20 @@ class DialView @JvmOverloads constructor(
         paint.color = Color.BLACK
         canvas?.drawCircle(pointPosition.x, pointPosition.y, radius/12, paint)
 
+        // Draw the indicator circle.
+        val markerRadius2 = radius - 75
+        pointPosition.computeXYForSpeed(fanSpeed, markerRadius2)
+        paint.color = Color.CYAN
+        canvas?.drawCircle(pointPosition.x, pointPosition.y, radius/12, paint)
+
         // Draw the text labels.
         val labelRadius = radius + RADIUS_OFFSET_LABEL
         for (i in FanSpeed.values()) {
+            paint.color = Color.BLACK
             pointPosition.computeXYForSpeed(i, labelRadius)
             val label = resources.getString(i.label)
             canvas?.drawText(label, pointPosition.x, pointPosition.y, paint)
         }
-
-
     }
 
 
